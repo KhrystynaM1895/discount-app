@@ -1,0 +1,16 @@
+api_version = "2026-07"
+
+[[extensions]]
+name = "Customer Tag Discount"
+handle = "customer-tag-discount"
+uid = "8972902d-0b92-fda8-9679-d2685aaa7cf4c728f995"
+type = "function"
+description = "Applies product discounts at checkout based on the customer's assigned tag."
+
+  [[extensions.targeting]]
+  target = "cart.lines.discounts.generate.run"
+  input_query = "src/cart_lines_discounts_generate_run.graphql"
+  export = "cart-lines-discounts-generate-run"
+
+  [extensions.build]
+  watch = ["src/**/*.js", "src/**/*.graphql"]

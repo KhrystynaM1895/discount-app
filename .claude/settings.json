@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(shopify app deploy*)",
+      "Bash(fly deploy*)",
+      "Bash(npx prisma migrate --force*)",
+      "Bash(npm publish*)"
+    ]
+  }
+}

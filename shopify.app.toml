@@ -2,19 +2,33 @@
 
 client_id = "118a3bcd55231d9bf81f4617e69ad5f3"
 name = "discount-app"
-application_url = "https://example.com"
+application_url = "https://positive-catfish-working.ngrok-free.app"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-include_config_on_deploy = true
 
 [webhooks]
 api_version = "2026-07"
 
+  [[webhooks.subscriptions]]
+  topics = [ "orders/paid" ]
+  uri = "/webhooks/orders/paid"
+
+# customers/create and customers/update require Protected customer data access
+# in Partner Dashboard (API access requests). Re-add subscriptions after approval:
+#
+#   [[webhooks.subscriptions]]
+#   topics = ["customers/create"]
+#   uri = "/webhooks/customers/create"
+#
+#   [[webhooks.subscriptions]]
+#   topics = ["customers/update"]
+#   uri = "/webhooks/customers/update"
+
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+scopes = "write_products,read_customers,write_customers,write_discounts,read_orders"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [ "https://positive-catfish-working.ngrok-free.app/api/auth" ]

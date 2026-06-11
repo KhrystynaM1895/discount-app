@@ -1,0 +1,29 @@
+query Input {
+  shop {
+    metafield(namespace: "discount_app", key: "rules") {
+      jsonValue
+    }
+  }
+  cart {
+    lines {
+      id
+      quantity
+      merchandise {
+        __typename
+        ... on ProductVariant {
+          id
+          product {
+            id
+          }
+        }
+      }
+    }
+    buyerIdentity {
+      customer {
+        metafield(namespace: "discount_app", key: "tags") {
+          jsonValue
+        }
+      }
+    }
+  }
+}

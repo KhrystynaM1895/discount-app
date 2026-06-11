@@ -1,0 +1,35 @@
+{
+  "shop": {
+    "metafield": {
+      "jsonValue": [
+        {
+          "name": "VIP 10% off everything",
+          "customerTag": "VIP",
+          "discountType": "percentage",
+          "discountValue": 10,
+          "scopeType": "all",
+          "scopeItems": [],
+          "productGids": []
+        }
+      ]
+    }
+  },
+  "cart": {
+    "lines": [
+      {
+        "id": "gid://shopify/CartLine/1",
+        "quantity": 2,
+        "merchandise": {
+          "__typename": "ProductVariant",
+          "id": "gid://shopify/ProductVariant/1",
+          "product": { "id": "gid://shopify/Product/1" }
+        }
+      }
+    ],
+    "buyerIdentity": {
+      "customer": {
+        "metafield": { "jsonValue": ["VIP"] }
+      }
+    }
+  }
+}

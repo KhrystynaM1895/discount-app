@@ -1,0 +1,46 @@
+{
+  "shop": {
+    "metafield": {
+      "jsonValue": [
+        {
+          "name": "VIP $5 off select products",
+          "customerTag": "VIP",
+          "discountType": "fixed_amount",
+          "discountValue": 5,
+          "scopeType": "product",
+          "scopeItems": [
+            { "shopifyGid": "gid://shopify/Product/1", "itemType": "product" }
+          ],
+          "productGids": ["gid://shopify/Product/1"]
+        }
+      ]
+    }
+  },
+  "cart": {
+    "lines": [
+      {
+        "id": "gid://shopify/CartLine/1",
+        "quantity": 1,
+        "merchandise": {
+          "__typename": "ProductVariant",
+          "id": "gid://shopify/ProductVariant/1",
+          "product": { "id": "gid://shopify/Product/1" }
+        }
+      },
+      {
+        "id": "gid://shopify/CartLine/2",
+        "quantity": 1,
+        "merchandise": {
+          "__typename": "ProductVariant",
+          "id": "gid://shopify/ProductVariant/9",
+          "product": { "id": "gid://shopify/Product/9" }
+        }
+      }
+    ],
+    "buyerIdentity": {
+      "customer": {
+        "metafield": { "jsonValue": ["VIP"] }
+      }
+    }
+  }
+}

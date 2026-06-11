@@ -9,13 +9,14 @@ generator client {
 // enough when changing adapters.
 // See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
 datasource db {
-  provider = "sqlite"
-  url      = "file:dev.sqlite"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Session {
-  id            String    @id
-  shop          String
+model session {
+  id                  Int       @id @default(autoincrement())
+  sessionId           String    @unique
+  shop                String
   state         String
   isOnline      Boolean   @default(false)
   scope         String?
@@ -31,4 +32,90 @@ model Session {
   emailVerified Boolean?  @default(false)
   refreshToken        String?
   refreshTokenExpires DateTime?
+}
+
+model discount_rule {
+  id               Int      @id @default(autoincrement())
+  shop             String
+  name             String
+  customer_tag_id  Int?
+  discount_type    String   // "percentage" | "fixed_amount"
+  discount_value   Decimal  @db.Decimal(10, 2)
+  status           String   @default("active") // "active" | "inactive"
+  scope_type       String   @default("all")    // "all" | "collection" | "product"
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  customerTag           customer_tag?              @relation(fields: [customer_tag_id], references: [id], onDelete: SetNull)
+  scope_items           discount_rule_scope_item[]
+  discount_applications discount_application[]
+
+  @@index([shop])
+  @@index([shop, status])
+  @@map("discount_rule")
+}
+
+model discount_rule_scope_item {
+  id               Int    @id @default(autoincrement())
+  discount_rule_id Int
+  shopify_gid      String // e.g. "gid://shopify/Collection/123"
+  item_type        String // "collection" | "product"
+
+  discount_rule discount_rule @relation(fields: [discount_rule_id], references: [id], onDelete: Cascade)
+
+  @@index([discount_rule_id])
+  @@map("discount_rule_scope_item")
+}
+
+model customer {
+  id              Int      @id @default(autoincrement())
+  shop            String
+  shopify_id      String
+  email           String?
+  first_name      String?
+  last_name       String?
+  customer_tag_id Int?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  customerTag           customer_tag?         @relation(fields: [customer_tag_id], references: [id], onDelete: SetNull)
+  discount_applications discount_application[]
+
+  @@unique([shop, shopify_id])
+  @@index([shop])
+  @@map("customer")
+}
+
+model customer_tag {
+  id         Int      @id @default(autoincrement())
+  shop       String
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  discountRules discount_rule[]
+  customers     customer[]
+
+  @@unique([shop, name])
+  @@index([shop])
+  @@map("customer_tag")
+}
+
+model discount_application {
+  id               Int      @id @default(autoincrement())
+  shop             String
+  discount_rule_id Int?
+  customer_id      Int?
+  order_id         String
+  discount_value   Decimal  @db.Decimal(10, 2)
+  discount_type    String
+  applied_at       DateTime @default(now())
+
+  discount_rule discount_rule? @relation(fields: [discount_rule_id], references: [id], onDelete: SetNull)
+  customer      customer?      @relation(fields: [customer_id], references: [id], onDelete: SetNull)
+
+  @@unique([shop, order_id, discount_rule_id])
+  @@index([shop, applied_at])
+  @@index([discount_rule_id])
+  @@map("discount_application")
 }
